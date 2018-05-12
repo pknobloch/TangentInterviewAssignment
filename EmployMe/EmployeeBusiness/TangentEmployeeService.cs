@@ -12,8 +12,8 @@ namespace EmployeeBusiness
     public class TangentEmployeeService
     {
         private string baseUrl;
-        private TangentAuthenticationToken token;
-        public bool IsAuthenticated => token != null;
+        public TangentAuthenticationToken Token { get; private set; }
+        public bool IsAuthenticated => Token != null;
 
         public event AuthenticationHandler AuthenticationFinished;
         public EventArgs e = null;
@@ -33,7 +33,7 @@ namespace EmployeeBusiness
         {
             var url = $"{baseUrl}api-token-auth/";
             var details = new TangentLoginDetails { username = username, password = password };
-            token = await LoginAsync(url, details);
+            Token = await LoginAsync(url, details);
             AuthenticationFinished?.Invoke(this, e);
             return IsAuthenticated;
         }

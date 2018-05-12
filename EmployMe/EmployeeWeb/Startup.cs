@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using EmployeeWeb.Data;
 using EmployeeWeb.Models;
 using EmployeeWeb.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 namespace EmployeeWeb
 {
@@ -40,15 +42,21 @@ namespace EmployeeWeb
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddSignInManager<TangentSigninManager<ApplicationUser>>()
+                ;
 
+            services.AddScoped<SignInManager<ApplicationUser>, TangentSigninManager<ApplicationUser>>();
+            
             services.AddMvc();
-
+            
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
@@ -72,7 +80,6 @@ namespace EmployeeWeb
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715

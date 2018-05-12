@@ -10,6 +10,10 @@ namespace EmployeeBusiness.DataContracts
         {
             this.token = token;
         }
-        public string token { get; private set; }
+        private string token;
+        public override string ToString()
+        {
+            return token;
+        }
     }
 }
