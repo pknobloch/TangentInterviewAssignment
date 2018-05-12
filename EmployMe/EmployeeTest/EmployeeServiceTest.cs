@@ -32,19 +32,29 @@ namespace EmployeeTest
         public static void ClassSetup(TestContext a)
         {
             tangentEmployeeService = new TangentEmployeeService(baseURL);
-
             var waitHandle = new AutoResetEvent(false);
+            var eventHandler = BuildAuthenticationHandler(waitHandle);
+            tangentEmployeeService.AuthenticationFinished += eventHandler;
+            try
+            {
+                tangentEmployeeService.AuthenticateAsync(username, password);
+                FailIfWaitedTooLong(waitHandle);
+            }
+            finally
+            {
+                tangentEmployeeService.AuthenticationFinished -= eventHandler;
+            }
+        }
+
+        private static AuthenticationHandler BuildAuthenticationHandler(AutoResetEvent waitHandle)
+        {
             AuthenticationHandler eventHandler = delegate (object sender, EventArgs e)
             {
                 waitHandle.Set();  // signal that the finished event was raised
             };
-            tangentEmployeeService.AuthenticationFinished += eventHandler;
-
-            tangentEmployeeService.AuthenticateAsync(username, password);
-
-            FailIfWaitedTooLong(waitHandle);
-            tangentEmployeeService.AuthenticationFinished -= eventHandler;
+            return eventHandler;
         }
+
         private static void FailIfWaitedTooLong(AutoResetEvent waitHandle)
         {
             if (!waitHandle.WaitOne(5000))
