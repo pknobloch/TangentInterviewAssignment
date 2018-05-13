@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
+using EmployeeWeb2.BusinessLogic;
 
 namespace EmployeeWeb2.Controllers
 {
@@ -15,10 +16,18 @@ namespace EmployeeWeb2.Controllers
         public async Task<ActionResult> Index()
         {
             var employees = await GetTangentEmployeeService().FetchEmployeesAsync();
-            var model = Mapper.Map<List<EmployeeViewModel>>(employees);
+            var modelEmployee = Mapper.Map<List<EmployeeViewModel>>(employees);
+            var model = new EmployeeFilterViewModel { Employees = modelEmployee, };
             return View(model);
         }
-
+        [HttpPost]
+        public async Task<ActionResult> Index(EmployeeFilterViewModel model)
+        {
+            var employees = await GetTangentEmployeeService().FetchEmployeesAsync(model);
+            var modelEmployee = Mapper.Map<List<EmployeeViewModel>>(employees);
+            var newModel = new EmployeeFilterViewModel { Employees = modelEmployee, };
+            return View(newModel);
+        }
         // GET: Employee/MyDetails
         public async Task<ActionResult> MyDetails()
         {

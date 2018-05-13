@@ -1,53 +1,65 @@
-﻿@model IEnumerable<EmployeeWeb2.Models.EmployeeViewModel>
+﻿@model EmployeeWeb2.Models.EmployeeFilterViewModel
 @{
     ViewBag.Title = "Employees";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
-<table class="table">
-    <thead class="thead-dark">
-    <tr>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.user.username)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.user.email)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.user.first_name)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.user.last_name)
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+@using (Html.BeginForm("Index","Employee", FormMethod.Post))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Filter</div>
+        <div class="row">
+            <div class="col-md-10">
+                @Html.LabelFor(m => m.Race): @Html.EnumDropDownListFor(m => m.Race, "-- Please Select --", new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-10">
+                @Html.LabelFor(m => m.Gender): @Html.EnumDropDownListFor(m => m.Gender, "-- Please Select --", new { @class = "form-control" })
+            </div>
+            <div class="col-md-10">
+                <input type="submit" value="Filter" class="btn  btn-primary btn-block" />
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.user.username)
-                </td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.user.email))
-                    {
-                        <a href="mailto:@item.user.email">@item.user.email</a>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.user.first_name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.user.last_name)
-                </td>
-                <td>
-                    @Html.ActionLink("View", "Details", new { id = item.user.id })
-                </td>
+                <th scope="col">Name</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Employees[0].race_display)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Employees[0].position.name)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Employees[0].gender_display)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Employees[0].user.username)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Employees[0].birth_date)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Employees[0].user.email)</th>
+                <th scope="col">Details</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Employees)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.user.last_name) &nbsp; @Html.DisplayFor(modelItem => item.user.first_name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.race_display)</td>
+                    <td>@Html.DisplayFor(modelItem => item.position.name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.gender_display)</td>
+                    <td>@Html.DisplayFor(modelItem => item.user.username)</td>
+                    <td>@Html.DisplayFor(modelItem => item.birth_date)</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.user.email))
+                        {
+                            <a href="mailto:@item.user.email">@item.user.email</a>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("View", "Details", new { id = item.user.id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 <hr />
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

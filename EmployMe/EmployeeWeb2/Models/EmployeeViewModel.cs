@@ -1,4 +1,5 @@
-﻿using EmployeeWeb2.Models.DataContracts;
+﻿using EmployeeWeb2.BusinessLogic;
+using EmployeeWeb2.Models.DataContracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,10 +20,12 @@ namespace EmployeeWeb2.Models
         public string github_user { get; set; }
         [Display(Name = "Birth Date")]
         public string birth_date { get; set; }
-        [Display(Name = "Gender")]
         public string gender { get; set; }
-        [Display(Name = "Race")]
+        [Display(Name = "Gender")]
+        public string gender_display { get { return gender.KeyToGender(); } set { race = value.GenderToKey(); } }
         public string race { get; set; }
+        [Display(Name = "Race")]
+        public string race_display { get { return race.KeyToRace(); } set { race = value.RaceToKey(); } }
         [Display(Name = "Years Worked")]
         public int years_worked { get; set; }
         [Display(Name = "Age")]
@@ -51,7 +54,7 @@ namespace EmployeeWeb2.Models
     public class PositionViewModel
     {
         public int id { get; set; }
-        [Display(Name = "Name")]
+        [Display(Name = "Position")]
         public string name { get; set; }
         [Display(Name = "Level")]
         public string level { get; set; }

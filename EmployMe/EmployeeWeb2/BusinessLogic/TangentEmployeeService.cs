@@ -1,11 +1,14 @@
 ﻿using EmployeeBusiness.DataContracts;
+using EmployeeWeb2.Models;
 using EmployeeWeb2.Models.DataContracts;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using EmployeeWeb2.BusinessLogic;
 
 namespace EmployeeBusiness
 {
@@ -67,6 +70,21 @@ namespace EmployeeBusiness
         public async Task<List<TangentEmployee>> FetchEmployeesAsync()
         {
             var url = $"{baseUrl}api/employee/";
+            return await Get<List<TangentEmployee>>(url);
+        }
+        public async Task<List<TangentEmployee>> FetchEmployeesAsync(EmployeeFilterViewModel model)
+        {
+            var filters = new List<string>();
+            if (model.Race != null)
+            {
+                filters.Add($"race={model.Race.ToString().RaceToKey()}");
+            }
+            if (model.Gender != null)
+            {
+                filters.Add($"gender={model.Gender.ToString().GenderToKey()}");
+            }
+            var url = $"{baseUrl}api/employee/";
+            if (filters.Any()) { url += $"?{string.Join("&", filters)}"; };
             return await Get<List<TangentEmployee>>(url);
         }
         public async Task<TangentEmployee> FetchEmployeeAsync(int userId)
