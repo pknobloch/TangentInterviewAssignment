@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using EmployeeWeb2.Models;
+using EmployeeBusiness;
+using System.Configuration;
+using System.Web.Security;
 
 namespace EmployeeWeb2.Controllers
 {
@@ -75,10 +78,17 @@ namespace EmployeeWeb2.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            //Custom Authentication code source: https://www.codeproject.com/Articles/1111522/Custom-Authentication-and-Authorization-in-MVC
+            var tangentEmployeeService = BuildEmployeeService();
+            var token = await tangentEmployeeService.AuthenticateAsync(model.Username, model.Password);
+            var result = tangentEmployeeService.IsAuthenticated ? SignInStatus.Success : SignInStatus.Failure;
             switch (result)
             {
                 case SignInStatus.Success:
+                    Session.Add(Constants.Session.TangentEmployeeService, tangentEmployeeService);
+                    SetUserAsAthenticated(model.Username);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -90,7 +100,20 @@ namespace EmployeeWeb2.Controllers
                     return View(model);
             }
         }
-
+        private static TangentEmployeeService BuildEmployeeService()
+        {
+            string baseURL = ConfigurationManager.AppSettings[Constants.AppSettings.TangentBaseUrl];
+            var tangentEmployeeService = new TangentEmployeeService(baseURL);
+            return tangentEmployeeService;
+        }
+        private void SetUserAsAthenticated(string username, string rolesCSV = "User")
+        {
+            FormsAuthentication.SetAuthCookie(username, false);
+            var authTicket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(20), false, rolesCSV);
+            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+            HttpContext.Response.Cookies.Add(authCookie);
+        }
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -151,7 +174,7 @@ namespace EmployeeWeb2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Username, Email = model.Username };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -202,7 +225,7 @@ namespace EmployeeWeb2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByNameAsync(model.Username);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -248,7 +271,7 @@ namespace EmployeeWeb2.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByNameAsync(model.Username);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
@@ -343,7 +366,7 @@ namespace EmployeeWeb2.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Username = loginInfo.Email });
             }
         }
 
@@ -367,7 +390,7 @@ namespace EmployeeWeb2.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Username, Email = model.Username };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -391,7 +414,9 @@ namespace EmployeeWeb2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session.RemoveAll();
+            FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
