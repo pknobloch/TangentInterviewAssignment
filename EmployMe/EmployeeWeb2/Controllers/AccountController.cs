@@ -18,6 +18,7 @@ namespace EmployeeWeb2.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private const string DefaultUserRole = "User";
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -76,11 +77,11 @@ namespace EmployeeWeb2.Controllers
                 return View(model);
             }
 
+            //TODO Delete this sample code
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
-            //Custom Authentication code source: https://www.codeproject.com/Articles/1111522/Custom-Authentication-and-Authorization-in-MVC
             var tangentEmployeeService = BuildEmployeeService();
             var token = await tangentEmployeeService.AuthenticateAsync(model.Username, model.Password);
             var result = tangentEmployeeService.IsAuthenticated ? SignInStatus.Success : SignInStatus.Failure;
@@ -89,6 +90,7 @@ namespace EmployeeWeb2.Controllers
                 case SignInStatus.Success:
                     Session.Add(Constants.Session.TangentEmployeeService, tangentEmployeeService);
                     SetUserAsAthenticated(model.Username);
+                    SetAuthenticationCookie(model);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -100,14 +102,26 @@ namespace EmployeeWeb2.Controllers
                     return View(model);
             }
         }
+        private void SetAuthenticationCookie(LoginViewModel model, string rolesCSV = DefaultUserRole)
+        {
+            if (!model.RememberMe) return;
+
+            //Source: https://stackoverflow.com/a/5620060/333427
+            var issueDate = DateTime.Now;
+            var expiration = DateTime.Now.AddMinutes(20);
+            var authTicket = new FormsAuthenticationTicket(1, model.Username, issueDate, expiration, model.RememberMe, rolesCSV, "/");
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket));
+            Response.Cookies.Add(cookie);
+        }
         private static TangentEmployeeService BuildEmployeeService()
         {
             string baseURL = ConfigurationManager.AppSettings[Constants.AppSettings.TangentBaseUrl];
             var tangentEmployeeService = new TangentEmployeeService(baseURL);
             return tangentEmployeeService;
         }
-        private void SetUserAsAthenticated(string username, string rolesCSV = "User")
+        private void SetUserAsAthenticated(string username, string rolesCSV = DefaultUserRole)
         {
+            //Custom Authentication code source: https://www.codeproject.com/Articles/1111522/Custom-Authentication-and-Authorization-in-MVC
             FormsAuthentication.SetAuthCookie(username, false);
             var authTicket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(20), false, rolesCSV);
             string encryptedTicket = FormsAuthentication.Encrypt(authTicket);

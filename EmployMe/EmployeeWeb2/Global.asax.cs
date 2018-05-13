@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeeWeb2.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,6 +18,7 @@ namespace EmployeeWeb2
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AutoMapperConfig.Configure();
         }
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
         {

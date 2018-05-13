@@ -4,6 +4,7 @@ using EmployeeBusiness;
 using System.Threading;
 using static EmployeeBusiness.TangentEmployeeService;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace EmployeeTest
 {
@@ -60,6 +61,14 @@ namespace EmployeeTest
         {
             //Ensure that the Unit Test framework behaves as expected.
             Assert.IsTrue(tangentEmployeeService.IsAuthenticated);
+        }
+        [TestMethod]
+        public async Task TestMyProfile()
+        {
+            var myProfile = await tangentEmployeeService.FetchMyEmployeeProfileAsync();
+            Assert.IsNotNull(myProfile);
+            Assert.IsNotNull(myProfile.user);
+            Assert.IsNotNull(myProfile.user.username);
         }
     }
 }

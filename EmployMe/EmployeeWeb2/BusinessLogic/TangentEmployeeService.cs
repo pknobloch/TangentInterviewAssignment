@@ -1,4 +1,5 @@
 ﻿using EmployeeBusiness.DataContracts;
+using EmployeeWeb2.Models.DataContracts;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -17,6 +18,7 @@ namespace EmployeeBusiness
         public bool IsAuthenticated => Token != null;
 
         public event AuthenticationHandler AuthenticationFinished;
+        
         public EventArgs e = null;
         public delegate void AuthenticationHandler(object s, EventArgs e);
         /// <summary>
@@ -38,16 +40,38 @@ namespace EmployeeBusiness
             AuthenticationFinished?.Invoke(this, e);
             return IsAuthenticated;
         }
-        private static async Task<TangentAuthenticationToken> LoginAsync(string url, TangentLoginDetails details)
+        private async Task<TangentAuthenticationToken> LoginAsync(string url, TangentLoginDetails details)
         {
             var jsonDetails = JsonConvert.SerializeObject(details);
+            return await Post<TangentAuthenticationToken>(url, jsonDetails);
+        }
+        private async Task<T> Get<T>(string url)
+        {
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Token {Token}");
+            var content = await httpClient.GetAsync(url);
+            var response = await content.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(response);
+        }
+        private async Task<T> Post<T>(string url, string jsonDetails)
+        {
             var content = await new HttpClient().PostAsync(url, BuildStringContent(jsonDetails));
             var response = await content.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TangentAuthenticationToken>(response);
+            return JsonConvert.DeserializeObject<T>(response);
         }
         private static HttpContent BuildStringContent(string json)
         {
             return new StringContent(json, Encoding.UTF8, "application/json");
+        }
+        public async Task<TangentEmployee> FetchMyEmployeeProfileAsync()
+        {
+            var url = $"{baseUrl}api/employee/me/";
+            return await Get<TangentEmployee>(url);
+        }
+        public async Task<TangentUser> FetchMyUserAsync()
+        {
+            var url = $"{baseUrl}api/user/me/";
+            return await Get<TangentUser>(url);
         }
     }
 }
