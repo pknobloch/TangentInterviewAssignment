@@ -14,7 +14,7 @@ namespace EmployeeWeb2.App_Start
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<TangentEmployee, ProfileViewModel>();
+                cfg.CreateMap<TangentEmployee, EmployeeViewModel>();
                 cfg.CreateMap<TangentUser, UserViewModel>();
                 cfg.CreateMap<TangentPosition, PositionViewModel>();
                 

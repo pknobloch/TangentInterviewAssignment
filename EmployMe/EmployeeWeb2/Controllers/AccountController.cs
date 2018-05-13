@@ -108,7 +108,7 @@ namespace EmployeeWeb2.Controllers
 
             //Source: https://stackoverflow.com/a/5620060/333427
             var issueDate = DateTime.Now;
-            var expiration = DateTime.Now.AddMinutes(20);
+            var expiration = DateTime.Now.AddMinutes(FormsAuthentication.Timeout.TotalMinutes);
             var authTicket = new FormsAuthenticationTicket(1, model.Username, issueDate, expiration, model.RememberMe, rolesCSV, "/");
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket));
             Response.Cookies.Add(cookie);

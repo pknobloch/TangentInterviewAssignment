@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EmployeeWeb2.Models
 {
-    public class ProfileViewModel
+    public class EmployeeViewModel
     {
         public UserViewModel user { get; set; }
         public PositionViewModel position { get; set; }

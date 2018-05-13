@@ -2,6 +2,7 @@
 using EmployeeWeb2.Models.DataContracts;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,6 +63,16 @@ namespace EmployeeBusiness
         private static HttpContent BuildStringContent(string json)
         {
             return new StringContent(json, Encoding.UTF8, "application/json");
+        }
+        public async Task<List<TangentEmployee>> FetchEmployeesAsync()
+        {
+            var url = $"{baseUrl}api/employee/";
+            return await Get<List<TangentEmployee>>(url);
+        }
+        public async Task<TangentEmployee> FetchEmployeeAsync(int userId)
+        {
+            var url = $"{baseUrl}api/employee/{userId}/";
+            return await Get<TangentEmployee>(url);
         }
         public async Task<TangentEmployee> FetchMyEmployeeProfileAsync()
         {

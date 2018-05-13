@@ -1,0 +1,54 @@
+﻿@model IEnumerable<EmployeeWeb2.Models.EmployeeViewModel>
+@{
+    ViewBag.Title = "Employees";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<table class="table">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">
+            @Html.DisplayNameFor(model => model.user.username)
+        </th>
+        <th scope="col">
+            @Html.DisplayNameFor(model => model.user.email)
+        </th>
+        <th scope="col">
+            @Html.DisplayNameFor(model => model.user.first_name)
+        </th>
+        <th scope="col">
+            @Html.DisplayNameFor(model => model.user.last_name)
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.username)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.user.email))
+                    {
+                        <a href="mailto:@item.user.email">@item.user.email</a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.first_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.last_name)
+                </td>
+                <td>
+                    @Html.ActionLink("View", "Details", new { id = item.user.id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
