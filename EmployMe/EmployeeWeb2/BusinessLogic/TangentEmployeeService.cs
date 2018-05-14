@@ -1,5 +1,4 @@
-﻿using EmployeeBusiness.DataContracts;
-using EmployeeWeb2.Models;
+﻿using EmployeeWeb2.Models;
 using EmployeeWeb2.Models.DataContracts;
 using Newtonsoft.Json;
 using System;
@@ -17,10 +16,11 @@ namespace EmployeeBusiness
     /// </summary>
     public class TangentEmployeeService
     {
-        private string baseUrl;
+        private readonly string baseUrl;
         public TangentAuthenticationToken Token { get; private set; }
         public bool IsAuthenticated => Token != null;
 
+        //Event used in unit tests because async is not supported
         public event AuthenticationHandler AuthenticationFinished;
         
         public EventArgs e = null;
@@ -121,6 +121,21 @@ namespace EmployeeBusiness
         {
             var url = $"{baseUrl}api/user/me/";
             return await Get<TangentUser>(url);
+        }
+        public async Task<List<TangentReview>> FetchReviewsAsync()
+        {
+            var url = $"{baseUrl}api/review/";
+            return await Get<List<TangentReview>>(url);
+        }
+        public async Task<List<TangentLeave>> FetchLeaveAsync()
+        {
+            var url = $"{baseUrl}api/leave/";
+            return await Get<List<TangentLeave>>(url);
+        }
+        public async Task<List<TangentLeave>> FetchLeaveAsync(int employeeId)
+        {
+            var url = $"{baseUrl}api/leave/?employee={employeeId}";
+            return await Get<List<TangentLeave>>(url);
         }
     }
 }

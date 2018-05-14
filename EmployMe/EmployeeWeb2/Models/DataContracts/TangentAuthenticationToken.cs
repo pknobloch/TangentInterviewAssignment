@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EmployeeBusiness.DataContracts
+namespace EmployeeWeb2.Models.DataContracts
 {
     public class TangentAuthenticationToken
     {

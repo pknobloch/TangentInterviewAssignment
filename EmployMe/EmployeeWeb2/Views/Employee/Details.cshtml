@@ -4,106 +4,224 @@
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
-
-<div class="panel panel-default">
-    <div class="panel-heading">User Details</div>
-    <div class="panel-body">
-
-        @Html.LabelFor(m => m.user.username, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.user.username, new { @class = "form-control" })
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">User Details</a>
+            </h4>
         </div>
-        @Html.LabelFor(m => m.user.email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.user.email, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.user.first_name, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.user.first_name, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.user.last_name, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.user.last_name, new { @class = "form-control" })
-        </div>
-        <div class="col-md-offset-2 col-md-10">
-            <div class="checkbox">
-                @Html.CheckBoxFor(m => m.user.is_active)
-                @Html.LabelFor(m => m.user.is_active)
-            </div>
-        </div>
-        <div class="col-md-offset-2 col-md-10">
-            <div class="checkbox">
-                @Html.CheckBoxFor(m => m.user.is_staff)
-                @Html.LabelFor(m => m.user.is_staff)
-            </div>
-        </div>
-        <div class="col-md-offset-2 col-md-10">
-            <div class="checkbox">
-                @Html.CheckBoxFor(m => m.user.is_superuser)
-                @Html.LabelFor(m => m.user.is_superuser)
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                @Html.LabelFor(m => m.user.username, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.user.username, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.user.email, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.user.email, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.user.first_name, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.user.first_name, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.user.last_name, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.user.last_name, new { @class = "form-control" })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.user.is_active)
+                        @Html.LabelFor(m => m.user.is_active)
+                    </div>
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.user.is_staff)
+                        @Html.LabelFor(m => m.user.is_staff)
+                    </div>
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.user.is_superuser)
+                        @Html.LabelFor(m => m.user.is_superuser)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading">Employee Details</div>
-    <div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Employee Details</a>
+            </h4>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse">
+            <div class="panel-body">
 
-        @Html.LabelFor(m => m.phone_number, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.phone_number, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.github_user, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.github_user, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.birth_date, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.birth_date, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.gender_display, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.gender_display, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.race_display, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.race_display, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.years_worked, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.years_worked, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.age, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.age, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.days_to_birthday, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.days_to_birthday, new { @class = "form-control" })
+                @Html.LabelFor(m => m.phone_number, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.phone_number, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.email, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.github_user, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.github_user, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.birth_date, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.birth_date, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.gender_display, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.gender_display, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.race_display, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.race_display, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.years_worked, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.years_worked, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.age, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.age, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.days_to_birthday, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.days_to_birthday, new { @class = "form-control" })
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">Position</div>
-    <div class="panel-body">
-        @Html.LabelFor(m => m.position.name, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.position.name, new { @class = "form-control" })
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Position</a>
+            </h4>
         </div>
-        @Html.LabelFor(m => m.position.level, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.position.level, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.position.sort, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.position.sort, new { @class = "form-control" })
+        <div id="collapse3" class="panel-collapse collapse">
+            <div class="panel-body">
+                @Html.LabelFor(m => m.position.name, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.position.name, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.position.level, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.position.level, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.position.sort, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.position.sort, new { @class = "form-control" })
+                </div>
+            </div>
         </div>
     </div>
+
+    @if (User.IsInRole("Senior"))
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Reviews</a>
+                </h4>
+            </div>
+            <div id="collapse4" class="panel-collapse collapse">
+                <div class="panel-body">
+                    @if (Model.Reviews.Any())
+                    {
+
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.Reviews[0].id)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.Reviews[0].date)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.Reviews[0].salary)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.Reviews[0].type_display)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.Reviews[0].position)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Reviews)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.id)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.date)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.salary)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.type_display)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.position)</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="col-md-10">
+                            @Html.Label("None yet!")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Leave</a>
+                </h4>
+            </div>
+            <div id="collapse5" class="panel-collapse collapse">
+                <div class="panel-body">
+                    @if (Model.LeaveRequests.Any())
+                    {
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].id)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].start_date)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].end_date)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].status)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].half_day)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].type)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.LeaveRequests[0].leave_days)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.LeaveRequests)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.id)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.start_date)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.end_date)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.status)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.half_day)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.type)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.leave_days)</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="col-md-10">
+                            @Html.Label("None yet!")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }@*if (User.IsInRole("Senior"))*@
 </div>
 <hr />
 @section Scripts {

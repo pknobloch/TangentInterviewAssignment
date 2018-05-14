@@ -46,17 +46,28 @@ namespace EmployeeWeb2.Controllers
         // GET: Employee/MyDetails
         public async Task<ActionResult> MyDetails()
         {
-            var employee = await GetTangentEmployeeService().FetchMyEmployeeProfileAsync();
-            var model = Mapper.Map<EmployeeViewModel>(employee);
-            return View("Details", model);
+            var employeeTask =  GetTangentEmployeeService().FetchMyEmployeeProfileAsync();
+            return await BuildDetails(employeeTask);
         }
-
         // GET: Employee/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var employee = await GetTangentEmployeeService().FetchEmployeeAsync(id);
+            var employeeTask = GetTangentEmployeeService().FetchEmployeeAsync(id);
+            return await BuildDetails(employeeTask);
+        }
+        private async Task<ActionResult> BuildDetails(Task<TangentEmployee> employeeTask)
+        {
+            var reviewTask = GetTangentEmployeeService().FetchReviewsAsync();
+            var leaveTask = GetTangentEmployeeService().FetchLeaveAsync(); //I could pass the userId here but it hasn't come back from the server yet
+            await Task.WhenAll(employeeTask, reviewTask, leaveTask);
+
+            var employee = await employeeTask;
+            var reviews = await reviewTask;
+            var leaveRequests = await leaveTask;
             var model = Mapper.Map<EmployeeViewModel>(employee);
-            return View(model);
+            model.Reviews = Mapper.Map<List<ReviewViewModel>>(reviews).Where(r => r.employee == employee.user.id).ToList();
+            model.LeaveRequests = Mapper.Map<List<LeaveViewModel>>(leaveRequests).Where(r => r.employee.user.id == employee.user.id).ToList();
+            return View("Details", model);
         }
 
         // GET: Employee/Create

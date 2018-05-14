@@ -17,7 +17,8 @@ namespace EmployeeWeb2.App_Start
                 cfg.CreateMap<TangentEmployee, EmployeeViewModel>();
                 cfg.CreateMap<TangentUser, UserViewModel>();
                 cfg.CreateMap<TangentPosition, PositionViewModel>();
-                
+                cfg.CreateMap<TangentReview, ReviewViewModel>();
+                cfg.CreateMap<TangentLeave, LeaveViewModel>();                
             });
         }
 

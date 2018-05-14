@@ -83,13 +83,14 @@ namespace EmployeeWeb2.Controllers
             //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
             var tangentEmployeeService = BuildEmployeeService();
-            var token = await tangentEmployeeService.AuthenticateAsync(model.Username, model.Password);
+            await tangentEmployeeService.AuthenticateAsync(model.Username, model.Password);
             var result = tangentEmployeeService.IsAuthenticated ? SignInStatus.Success : SignInStatus.Failure;
             switch (result)
             {
                 case SignInStatus.Success:
                     Session.Add(Constants.Session.TangentEmployeeService, tangentEmployeeService);
-                    SetUserAsAthenticated(model.Username);
+                    var profile = await tangentEmployeeService.FetchMyEmployeeProfileAsync();
+                    SetUserAsAthenticated(model.Username, profile.position.level);
                     SetAuthenticationCookie(model);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
