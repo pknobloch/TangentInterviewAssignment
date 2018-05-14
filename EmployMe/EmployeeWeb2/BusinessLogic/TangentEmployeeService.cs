@@ -72,7 +72,7 @@ namespace EmployeeBusiness
             var url = $"{baseUrl}api/employee/";
             return await Get<List<TangentEmployee>>(url);
         }
-        public async Task<List<TangentEmployee>> FetchEmployeesAsync(EmployeeFilterViewModel model)
+        public async Task<List<TangentEmployee>> SearchEmployeesAsync(EmployeeFilterViewModel model)
         {
             var filters = new List<string>();
             if (model.Race != null)
@@ -82,6 +82,26 @@ namespace EmployeeBusiness
             if (model.Gender != null)
             {
                 filters.Add($"gender={model.Gender.ToString().GenderToKey()}");
+            }
+            if (model.Position != null)
+            {
+                filters.Add($"position={model.Position.Value}");
+            }
+            if (model.BirthDateRange != null)
+            {
+                filters.Add($"birth_date_range={model.BirthDateRange.Value}");
+            }
+            if (model.BirthDateRange != null)
+            {
+                filters.Add($"start_date_range={model.StartDateRange.Value}");
+            }
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                filters.Add($"email__contains={model.Email}");
+            }
+            if (model.UserId.HasValue)
+            {
+                filters.Add($"user={model.UserId}");
             }
             var url = $"{baseUrl}api/employee/";
             if (filters.Any()) { url += $"?{string.Join("&", filters)}"; };

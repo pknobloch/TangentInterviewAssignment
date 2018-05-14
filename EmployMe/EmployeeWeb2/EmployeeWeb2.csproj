@@ -201,7 +201,10 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BusinessLogic\DateRangeEnum.cs" />
+    <Compile Include="BusinessLogic\EmployeeReviewTypeEnum.cs" />
     <Compile Include="BusinessLogic\GenderEnum.cs" />
+    <Compile Include="BusinessLogic\PositionEnum.cs" />
     <Compile Include="BusinessLogic\RaceEnum.cs" />
     <Compile Include="BusinessLogic\ValueHelpers.cs" />
     <Compile Include="BusinessLogic\TangentEmployeeService.cs" />

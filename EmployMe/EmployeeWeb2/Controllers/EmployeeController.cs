@@ -7,26 +7,41 @@ using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using EmployeeWeb2.BusinessLogic;
+using EmployeeWeb2.Models.DataContracts;
 
 namespace EmployeeWeb2.Controllers
 {
+    [Authorize]
     public class EmployeeController : BaseController
     {
         // GET: Employee
         public async Task<ActionResult> Index()
         {
-            var employees = await GetTangentEmployeeService().FetchEmployeesAsync();
-            var modelEmployee = Mapper.Map<List<EmployeeViewModel>>(employees);
-            var model = new EmployeeFilterViewModel { Employees = modelEmployee, };
+            var allEmployees = await GetTangentEmployeeService().FetchEmployeesAsync();
+            var modelEmployee = Mapper.Map<List<EmployeeViewModel>>(allEmployees);
+            var model = new EmployeeFilterViewModel { Employees = modelEmployee, Users = BuildUserSelectList(allEmployees), };
             return View(model);
+        }
+        private IEnumerable<SelectListItem> BuildUserSelectList(List<TangentEmployee> employees)
+        {
+            return new[] { new SelectListItem { Value = null, Text = "-- Please Select --", } } //Default value
+            .Concat(employees
+                .OrderBy(m => m.user.username)
+                .Select(m => new SelectListItem { Value = m.user.id.ToString(), Text = m.user.username, }));
         }
         [HttpPost]
         public async Task<ActionResult> Index(EmployeeFilterViewModel model)
         {
-            var employees = await GetTangentEmployeeService().FetchEmployeesAsync(model);
+            var taskAll = GetTangentEmployeeService().FetchEmployeesAsync();
+            var taskSearch = GetTangentEmployeeService().SearchEmployeesAsync(model);
+            await Task.WhenAll(taskAll, taskSearch);
+
+            var allEmployees = await taskAll;
+            var employees = await taskSearch;
             var modelEmployee = Mapper.Map<List<EmployeeViewModel>>(employees);
-            var newModel = new EmployeeFilterViewModel { Employees = modelEmployee, };
-            return View(newModel);
+            model.Employees = modelEmployee;
+            model.Users = BuildUserSelectList(allEmployees);
+            return View(model);
         }
         // GET: Employee/MyDetails
         public async Task<ActionResult> MyDetails()
